@@ -1,0 +1,18 @@
+apiVersion: kagent.dev/v1alpha1
+kind: MCPServer
+metadata:
+  name: awslabs-billing-cost-management-mcp-server-latest
+  namespace: kagent
+spec:
+  deployment:
+    args:
+    - awslabs.billing-cost-management-mcp-server@latest
+    cmd: uvx
+    env:
+      AWS_ACCESS_KEY_ID: 
+      AWS_REGION: us-east-1
+      AWS_SECRET_ACCESS_KEY: 
+    image: ghcr.io/astral-sh/uv:debian
+    port: 3000
+  stdioTransport: {}
+  transportType: stdio

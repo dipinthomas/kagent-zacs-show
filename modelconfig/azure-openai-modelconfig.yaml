@@ -1,0 +1,99 @@
+# Azure OpenAI ModelConfig Example
+# All supported options for Azure OpenAI provider
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: azure-openai-full-config
+  namespace: kagent
+spec:
+  provider: AzureOpenAI
+  # Model is the Azure deployment name (not the base model name)
+  model: gpt-4o  # This should match your Azure deployment name
+  
+  # API Key reference (required)
+  apiKeySecret: kagent-azure-openai
+  apiKeySecretKey: AZURE_OPENAI_API_KEY
+  
+  # Azure OpenAI-specific settings
+  azureOpenAI:
+    # Azure endpoint (required) - Your Azure OpenAI resource endpoint
+    azureEndpoint: "https://YOUR-RESOURCE-NAME.openai.azure.com/"
+    
+    # API version (required) - Azure OpenAI API version
+    # Common versions: 2024-02-15-preview, 2023-12-01-preview, 2023-05-15
+    apiVersion: "2024-02-15-preview"
+    
+    # Azure deployment (optional) - if different from spec.model
+    # Useful when you want to reference a logical name but use a different deployment
+    azureDeployment: "gpt-4o-deployment"
+    
+    # Azure AD Token (optional) - for Azure AD authentication instead of API key
+    # Leave empty if using API key authentication
+    azureAdToken: ""
+    
+    # Temperature (string): Controls randomness
+    # Range: 0.0 to 2.0
+    temperature: "0.7"
+    
+    # Max tokens (integer): Maximum tokens to generate
+    maxTokens: 2000
+    
+    # Top-p (string): Nucleus sampling
+    # Range: 0.0 to 1.0
+    topP: "0.9"
+  
+  # Optional: Custom headers
+  defaultHeaders:
+    X-Custom-Header: "my-value"
+
+---
+# Minimal Azure OpenAI config (API key auth)
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: azure-openai-minimal
+  namespace: kagent
+spec:
+  provider: AzureOpenAI
+  model: gpt-4o
+  apiKeySecret: kagent-azure-openai
+  apiKeySecretKey: AZURE_OPENAI_API_KEY
+  azureOpenAI:
+    azureEndpoint: "https://YOUR-RESOURCE-NAME.openai.azure.com/"
+    apiVersion: "2024-02-15-preview"
+
+---
+# Azure OpenAI with Azure AD authentication
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: azure-openai-ad-auth
+  namespace: kagent
+spec:
+  provider: AzureOpenAI
+  model: gpt-4o
+  azureOpenAI:
+    azureEndpoint: "https://YOUR-RESOURCE-NAME.openai.azure.com/"
+    apiVersion: "2024-02-15-preview"
+    # Use Azure AD token instead of API key
+    azureAdToken: "YOUR-AZURE-AD-TOKEN"
+    temperature: "0.7"
+    maxTokens: 2000
+
+---
+# Azure OpenAI for different deployments
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: azure-openai-gpt35
+  namespace: kagent
+spec:
+  provider: AzureOpenAI
+  model: gpt-35-turbo  # Your deployment name
+  apiKeySecret: kagent-azure-openai
+  apiKeySecretKey: AZURE_OPENAI_API_KEY
+  azureOpenAI:
+    azureEndpoint: "https://YOUR-RESOURCE-NAME.openai.azure.com/"
+    apiVersion: "2024-02-15-preview"
+    temperature: "0.5"
+    maxTokens: 1000

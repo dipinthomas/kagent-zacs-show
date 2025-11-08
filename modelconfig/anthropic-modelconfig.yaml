@@ -1,0 +1,88 @@
+# Anthropic (Claude) ModelConfig Example
+# All supported options for Anthropic provider
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: anthropic-full-config
+  namespace: kagent
+spec:
+  provider: Anthropic
+  # Model options: claude-3-5-sonnet-20241022, claude-3-opus-20240229, claude-3-sonnet-20240229, claude-3-haiku-20240307
+  model: claude-3-5-sonnet-20241022
+  
+  # API Key reference (required)
+  apiKeySecret: kagent-anthropic
+  apiKeySecretKey: ANTHROPIC_API_KEY
+  
+  # Anthropic-specific settings
+  anthropic:
+    # Base URL (optional) - defaults to https://api.anthropic.com
+    baseUrl: "https://api.anthropic.com"
+    
+    # Temperature (string): Controls randomness
+    # Range: 0.0 to 1.0 (Anthropic uses 0-1, not 0-2 like OpenAI)
+    temperature: "0.7"
+    
+    # Max tokens (integer): Maximum tokens to generate
+    # Claude can handle very large responses
+    maxTokens: 4096
+    
+    # Top-k (integer): Limits to top K tokens for sampling
+    # Higher = more diverse, lower = more focused
+    topK: 40
+    
+    # Top-p (string): Nucleus sampling parameter
+    # Range: 0.0 to 1.0
+    topP: "0.9"
+  
+  # Optional: Custom headers
+  defaultHeaders:
+    X-Custom-Header: "my-value"
+
+---
+# Minimal Anthropic config
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: anthropic-minimal
+  namespace: kagent
+spec:
+  provider: Anthropic
+  model: claude-3-5-sonnet-20241022
+  apiKeySecret: kagent-anthropic
+  apiKeySecretKey: ANTHROPIC_API_KEY
+  anthropic:
+    maxTokens: 4096  # Required for Anthropic
+
+---
+# High-reasoning config (Claude Opus)
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: anthropic-reasoning
+  namespace: kagent
+spec:
+  provider: Anthropic
+  model: claude-3-opus-20240229
+  apiKeySecret: kagent-anthropic
+  apiKeySecretKey: ANTHROPIC_API_KEY
+  anthropic:
+    temperature: "0.2"  # Low temp for precise reasoning
+    maxTokens: 8000
+    topP: "0.95"
+
+---
+# Fast/cheap config (Claude Haiku)
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: anthropic-fast
+  namespace: kagent
+spec:
+  provider: Anthropic
+  model: claude-3-haiku-20240307
+  apiKeySecret: kagent-anthropic
+  apiKeySecretKey: ANTHROPIC_API_KEY
+  anthropic:
+    temperature: "0.5"
+    maxTokens: 2048

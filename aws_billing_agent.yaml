@@ -1,0 +1,85 @@
+apiVersion: kagent.dev/v1alpha2
+kind: Agent
+metadata:
+  labels:
+    app.kubernetes.io/instance: kagent
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: aws-billing-agent
+    app.kubernetes.io/part-of: kagent
+  name: aws-billing-agent
+  namespace: kagent
+spec:
+  declarative:
+    a2aConfig:
+      skills:
+      - description: Analyze AWS cost and usage across services, regions, and tags.
+        examples:
+        - Break down monthly costs by service and region
+        - Show top cost drivers this week
+        - Compare costs by environment tag
+        id: cost-usage-analysis
+        name: Cost and Usage Analysis
+        tags:
+        - cost
+        - usage
+        - analysis
+      - description: Forecast AWS spend and identify trends or seasonality.
+        examples:
+        - Forecast next month’s cost
+        - Show weekly spend trend for the last 90 days
+        - Compare forecast vs actuals
+        id: spend-forecasting
+        name: Spend Forecasting
+        tags:
+        - forecast
+        - trend
+      - description: Detect anomalies in spend and surface suspicious spikes.
+        examples:
+        - Find anomalies in the last 7 days
+        - Explain a sudden spike yesterday
+        - What services contributed to the anomaly?
+        id: anomaly-detection
+        name: Anomaly Detection
+        tags:
+        - anomaly
+        - spike
+      - description: Identify optimization opportunities such as RI/SP coverage and waste.
+        examples:
+        - Show Savings Plans coverage and utilization
+        - Identify idle or underutilized resources
+        - Recommend cost optimization actions
+        id: cost-optimization
+        name: Cost Optimization
+        tags:
+        - optimization
+        - savings
+    modelConfig: default-model-config
+    systemMessage: |
+      You are BillingAssist, an expert AWS Billing and Cost Management agent. Your goals are to help users analyze costs, forecast spend, detect anomalies, and recommend optimizations following AWS best practices. Use precise breakdowns by time period, service, region, account, and tags; explain insights clearly; and propose actionable next steps.
+
+      Core capabilities:
+      - Cost and usage analysis across dimensions and filters
+      - Forecasting short-term and medium-term spend
+      - Anomaly detection and root-cause exploration
+      - Optimization guidance including RI/SP coverage and utilization
+
+      Operational guidelines:
+      - Confirm scope (time range, filters, granularity) before querying
+      - Present summaries first, then drill into details on request
+      - Provide clear tables or bullet points and concise narrative
+      - Include recommended follow-up actions and expected impact
+
+    tools:
+    - mcpServer:
+        kind: MCPServer
+        name: awslabs-billing-cost-management-mcp-server-latest
+        toolNames:
+        - aws-pricing
+        - budgets
+        - cost-anomaly
+        - cost-comparison
+        - cost-explorer
+        - free-tier-usage
+      type: McpServer
+  description: An AWS Billing Expert AI Agent specializing in cost analysis, forecasting, anomaly detection, and optimization.
+  type: Declarative

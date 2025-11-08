@@ -1,0 +1,15 @@
+# prerequisites
+Install Kagent CLI|curl https://raw.githubusercontent.com/kagent-dev/kagent/refs/heads/main/scripts/get-kagent | bash
+
+# install CRDs
+Install kagent CRDs|helm upgrade --install kagent-crds oci://ghcr.io/kagent-dev/kagent/helm/kagent-crds --namespace kagent --create-namespace
+Verify CRDs release|kubectl get crds | grep kagent
+
+# install controller
+OpenAI Key|if [ -z "${OPENAI_API_KEY:-}" ]; then read -s -p "Enter OpenAI API Key: " OPENAI_API_KEY </dev/tty; echo; fi; printf '%s' "$OPENAI_API_KEY" > .kagent_openai_key
+Install kagent|OPENAI_API_KEY="$(cat .kagent_openai_key)"; helm upgrade --install kagent oci://ghcr.io/kagent-dev/kagent/helm/kagent --namespace kagent -f all_agents_values.yaml --set providers.default=openAI --set providers.openAI.apiKey="$OPENAI_API_KEY"
+Verify kagent release|kubectl get pods -n kagent
+
+# post-install checks
+Show services|kubectl get svc -n kagent
+show mcp tools|kubectl get remotemcpservers -n kagent

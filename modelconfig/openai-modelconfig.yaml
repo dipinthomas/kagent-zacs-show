@@ -1,0 +1,48 @@
+# OpenAI ModelConfig (kagent.dev/v1alpha2)
+# This example uses ONLY schema-safe fields known to be accepted by your CRD.
+# Notes:
+# - Keep temperature/topP as strings (per CRD schema).
+# - Add organization only if you belong to multiple orgs.
+# - You can add other fields later via `kubectl patch` if needed.
+
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: openai-full-config
+  namespace: kagent
+spec:
+  # Provider and base model selection
+  provider: OpenAI
+  model: gpt-4o  # e.g., gpt-4o, gpt-4o-mini, gpt-4-turbo
+
+  # API key location (Secret must exist in this namespace)
+  apiKeySecret: kagent-openai
+  apiKeySecretKey: OPENAI_API_KEY
+
+  # OpenAI-specific settings
+  openAI:
+    # Optional: override base URL (default: https://api.openai.com/v1)
+    baseUrl: "https://api.openai.com/v1"
+
+    # Optional: set your organization ID if applicable
+    organization: "org_YOUR_ORG_ID"
+
+    # Sampling controls
+    temperature: "0.7"    # 0.0..2.0 (string)
+    topP: "0.9"           # 0.0..1.0 (string)
+
+    # Response length limit
+    maxTokens: 2000        # integer
+
+---
+# Minimal OpenAI ModelConfig (just required fields)
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: openai-gpt-5-mini
+  namespace: kagent
+spec:
+  provider: OpenAI
+  model: gpt-5-mini
+  apiKeySecret: kagent-openai
+  apiKeySecretKey: OPENAI_API_KEY

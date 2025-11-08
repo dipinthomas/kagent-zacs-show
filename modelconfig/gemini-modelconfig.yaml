@@ -1,0 +1,148 @@
+# Google Gemini ModelConfig Examples
+# Two variants: Gemini (direct API) and GeminiVertex AI (via Vertex AI)
+
+# ============================================
+# Gemini (Direct API via Google AI Studio)
+# ============================================
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: gemini-full-config
+  namespace: kagent
+spec:
+  provider: Gemini
+  # Model options: gemini-2.0-flash-exp, gemini-1.5-pro, gemini-1.5-flash
+  model: gemini-2.0-flash-exp
+  
+  # API Key reference (required) - Get from Google AI Studio
+  apiKeySecret: kagent-gemini
+  apiKeySecretKey: GEMINI_API_KEY
+
+  # Note: Direct Gemini provider has limited tunables in this CRD version.
+  # Do not set temperature/maxTokens under spec.gemini.
+
+---
+# Minimal Gemini config
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: gemini-minimal
+  namespace: kagent
+spec:
+  provider: Gemini
+  model: gemini-2.0-flash-exp
+  apiKeySecret: kagent-gemini
+  apiKeySecretKey: GEMINI_API_KEY
+
+---
+# ============================================
+# Gemini via Vertex AI (GCP)
+# ============================================
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: gemini-vertex-full-config
+  namespace: kagent
+spec:
+  provider: GeminiVertexAI
+  # Model options: gemini-2.0-flash-exp, gemini-1.5-pro, gemini-1.5-flash
+  model: gemini-1.5-pro
+  
+  # API Key reference (GCP service account key)
+  apiKeySecret: kagent-gcp
+  apiKeySecretKey: GCP_SERVICE_ACCOUNT_KEY
+  
+  # Vertex AI-specific settings
+  geminiVertexAI:
+    # GCP Project ID (required)
+    projectID: "your-gcp-project-id"
+    
+    # Location/Region (required)
+    # Options: us-central1, us-east1, europe-west1, asia-northeast1, etc.
+    location: "us-central1"
+    
+    # Temperature (string): Controls randomness
+    # Range: 0.0 to 2.0
+    temperature: "0.9"
+    
+    # Max output tokens (integer): Maximum tokens to generate
+    maxOutputTokens: 8192
+    
+    # Top-k (string): Limits to top K tokens
+    topK: "40"
+    
+    # Top-p (string): Nucleus sampling
+    # Range: 0.0 to 1.0
+    topP: "0.95"
+    
+    # Candidate count (integer): Number of response variations to generate
+    candidateCount: 1
+    
+    # Stop sequences (list): Sequences that stop generation
+    stopSequences:
+      - "END"
+      - "STOP"
+      - "\n\n\n"
+    
+    # Response MIME type (string): Format of the response
+    # Options: text/plain, application/json
+    responseMimeType: "text/plain"
+  
+  # Optional: Custom headers
+  defaultHeaders:
+    X-Custom-Header: "my-value"
+
+---
+# Minimal Gemini Vertex AI config
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: gemini-vertex-minimal
+  namespace: kagent
+spec:
+  provider: GeminiVertexAI
+  model: gemini-1.5-flash
+  apiKeySecret: kagent-gcp
+  apiKeySecretKey: GCP_SERVICE_ACCOUNT_KEY
+  geminiVertexAI:
+    projectID: "your-gcp-project-id"
+    location: "us-central1"
+
+---
+# Gemini Vertex AI - JSON mode
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: gemini-vertex-json
+  namespace: kagent
+spec:
+  provider: GeminiVertexAI
+  model: gemini-1.5-pro
+  apiKeySecret: kagent-gcp
+  apiKeySecretKey: GCP_SERVICE_ACCOUNT_KEY
+  geminiVertexAI:
+    projectID: "your-gcp-project-id"
+    location: "us-central1"
+    temperature: "0.3"
+    maxOutputTokens: 4096
+    responseMimeType: "application/json"  # Force JSON output
+
+---
+# Gemini Vertex AI - Creative writing
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: gemini-vertex-creative
+  namespace: kagent
+spec:
+  provider: GeminiVertexAI
+  model: gemini-1.5-pro
+  apiKeySecret: kagent-gcp
+  apiKeySecretKey: GCP_SERVICE_ACCOUNT_KEY
+  geminiVertexAI:
+    projectID: "your-gcp-project-id"
+    location: "us-central1"
+    temperature: "1.5"  # High creativity
+    maxOutputTokens: 8192
+    topP: "0.95"
+    topK: "40"

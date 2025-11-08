@@ -1,0 +1,34 @@
+
+agents:
+  argo-rollouts-agent:
+    enabled: false
+  cilium-debug-agent:
+    enabled: false
+  cilium-manager-agent:
+    enabled: false
+  cilium-policy-agent:
+    enabled: false
+  helm-agent:
+    enabled: true
+  istio-agent:
+    enabled: false
+  k8s-agent:
+    enabled: true
+  kgateway-agent:
+    enabled: true
+  observability-agent:
+    enabled: false
+  promql-agent:
+    enabled: false
+
+kmcp:
+  enabled: true
+
+kagent-tools:
+  enabled: true
+
+tools:
+  grafana-mcp:
+    enabled: true
+  querydoc:
+    enabled: true
